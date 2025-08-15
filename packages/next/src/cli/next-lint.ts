@@ -70,9 +70,9 @@ const nextLint = async (options: NextLintOptions, directory?: string) => {
       'For new projects, use ' +
       bold('create-next-app') +
       ' to choose your preferred linter.\n' +
-      'For existing projects, migrate to explicit ESLint configuration and update your package.json scripts to use ' +
-      bold('"eslint"') +
-      ' instead.\n'
+      'For existing projects, migrate to the ESLint CLI:\n' +
+      bold('npx @next/codemod@latest next-lint-to-eslint-cli .') +
+      '\n'
   )
 
   const baseDir = getProjectDir(directory)
@@ -159,7 +159,7 @@ const nextLint = async (options: NextLintOptions, directory?: string) => {
       if (lintOutput) {
         printAndExit(lintOutput, 0)
       } else if (lintResults && !lintOutput) {
-        printAndExit(green('✔ No ESLint warnings or errors'), 0)
+        printAndExit(green('No ESLint warnings or errors'), 0)
       } else {
         // this makes sure we exit 1 after the error from line 116
         // in packages/next/src/lib/eslint/runLintCheck
