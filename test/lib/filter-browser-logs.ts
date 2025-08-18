@@ -9,34 +9,34 @@ export function filterBrowserLogs(output: string): string {
 
   return lines
     .filter((line, index) => {
-      // For the first line, if we didn't start with a newline, we might be mid-line
-      if (index === 0 && output.length > 0 && !output.startsWith('\n')) {
-        // Check if this could be part of a browser log line
-        // A browser log line would have been "[browser] ..." but we might have sliced it
-        // So we check for common patterns that indicate it's part of a browser log
+      // For complete lines (not the first line when sliced mid-line), check if they start with [browser]
+      if (index > 0 || output.startsWith('\n')) {
+        return !line.startsWith('[browser]')
+      }
 
+      // For the first line when we might have sliced mid-line
+      if (index === 0 && output.length > 0 && !output.startsWith('\n')) {
         // If it contains [browser], it's definitely a browser log
         if (line.includes('[browser]')) return false
 
-        // If it looks like a fragment of a browser log (e.g., "rowser] ...", "wser] ...", etc.)
-        // We check if it starts with patterns that could be the tail of "[browser]"
-        const browserFragments = [
-          'rowser]',
-          'owser]',
-          'wser]',
-          'ser]',
-          'er]',
-          'r]',
-          ']',
-        ]
-        for (const fragment of browserFragments) {
-          if (line.startsWith(fragment)) return false
-        }
+        // Check if this looks like a fragment of "[browser] ..." line
+        // Browser logs typically have a specific format: "[browser] <log content>"
+        // So if we see fragments like "rowser] <something>", it's likely a browser log
+        // We'll be conservative and only filter obvious browser log fragments
 
+        // Check for "rowser] " specifically (with space), as browser logs have space after ]
+        if (/^rowser\] /.test(line)) return false
+        if (/^owser\] /.test(line)) return false
+        if (/^wser\] /.test(line)) return false
+        if (/^ser\] /.test(line)) return false
+        if (/^er\] /.test(line)) return false
+        if (/^r\] /.test(line)) return false
+
+        // Don't filter other lines that might legitimately start with these patterns
         return true
       }
-      // For complete lines, check if they start with [browser]
-      return !line.startsWith('[browser]')
+
+      return true
     })
     .join('\n')
 }
