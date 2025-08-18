@@ -58,7 +58,7 @@ describe('app-dir - server source maps edge runtime', () => {
       })
 
       const cliOutput = stripAnsi(
-        filterBrowserLogs(next.cliOutput.slice(outputIndex))
+        filterBrowserLogs(next.cliOutput).slice(outputIndex)
       )
       expect(cliOutput).toContain(
         '\n ⨯ Error: ssr-throw' +
@@ -90,7 +90,7 @@ describe('app-dir - server source maps edge runtime', () => {
       })
 
       const cliOutput = stripAnsi(
-        filterBrowserLogs(next.cliOutput.slice(outputIndex))
+        filterBrowserLogs(next.cliOutput).slice(outputIndex)
       )
       expect(cliOutput).toContain(
         '\n ⨯ Error: rsc-throw' +

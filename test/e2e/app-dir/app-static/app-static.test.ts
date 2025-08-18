@@ -4468,7 +4468,7 @@ describe('app-dir static/dynamic handling', () => {
           ).toBe(2)
           expect(
             stripAnsi(
-              filterBrowserLogs(next.cliOutput.substring(cliOutputStart))
+              filterBrowserLogs(next.cliOutput).substring(cliOutputStart)
             )
           ).toMatch(
             /Failed to set Next.js data cache for http:\/\/localhost:.*?\/api\/large-data, items over 2MB can not be cached/
