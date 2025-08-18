@@ -316,12 +316,9 @@ export function getDefineEnv({
       !!config.experimental.devtoolSegmentExplorer,
 
     'process.env.__NEXT_BROWSER_DEBUG_INFO_IN_TERMINAL': JSON.stringify(
-      // Disable by default in test mode to avoid interfering with test output
-      process.env.NEXT_TEST_MODE || process.env.__NEXT_TEST_MODE
-        ? false
-        : config.experimental?.browserDebugInfoInTerminal ??
-            config.browserDebugInfoInTerminal ??
-            true
+      config.experimental?.browserDebugInfoInTerminal ??
+        config.browserDebugInfoInTerminal ??
+        true
     ),
 
     // The devtools need to know whether or not to show an option to clear the
