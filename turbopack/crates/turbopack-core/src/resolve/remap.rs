@@ -1,4 +1,4 @@
-use std::{collections::BTreeMap, fmt::Display, ops::Deref};
+use std::{borrow::Cow, collections::BTreeMap, fmt::Display, ops::Deref};
 
 use anyhow::{Result, bail};
 use rustc_hash::FxHashMap;
@@ -12,6 +12,7 @@ use super::{
     options::ConditionValue,
     pattern::Pattern,
 };
+use crate::resolve::alias_map::AliasKey;
 
 /// A small helper type to differentiate parsing exports and imports fields.
 #[derive(Copy, Clone)]
@@ -235,17 +236,21 @@ impl ReplacedSubpathValue {
     /// vector. It uses the `conditions` to skip or enter conditional
     /// results. The state of conditions is stored within
     /// `condition_overrides`, which is also exposed to the consumer.
-    pub fn add_results(
+    pub fn add_results<'a, 'b>(
         self,
+        prefix: Cow<'a, str>,
+        key: &'b AliasKey,
         conditions: &BTreeMap<RcStr, ConditionValue>,
         unspecified_condition: &ConditionValue,
         condition_overrides: &mut FxHashMap<RcStr, ConditionValue>,
-        target: &mut Vec<(Pattern, Vec<(RcStr, bool)>)>,
+        target: &mut Vec<(Pattern, Vec<(RcStr, bool)>, Cow<'a, str>, &'b AliasKey)>,
     ) -> bool {
         match self {
             ReplacedSubpathValue::Alternatives(list) => {
                 for value in list {
                     if value.add_results(
+                        prefix.clone(),
+                        key,
                         conditions,
                         unspecified_condition,
                         condition_overrides,
@@ -269,6 +274,8 @@ impl ReplacedSubpathValue {
                     match condition_value {
                         ConditionValue::Set => {
                             if value.add_results(
+                                prefix.clone(),
+                                key,
                                 conditions,
                                 unspecified_condition,
                                 condition_overrides,
@@ -281,6 +288,8 @@ impl ReplacedSubpathValue {
                         ConditionValue::Unknown => {
                             condition_overrides.insert(condition.clone(), ConditionValue::Set);
                             if value.add_results(
+                                prefix.clone(),
+                                key,
                                 conditions,
                                 unspecified_condition,
                                 condition_overrides,
@@ -306,6 +315,8 @@ impl ReplacedSubpathValue {
                             ConditionValue::Unknown => None,
                         })
                         .collect(),
+                    prefix,
+                    key,
                 ));
                 true
             }
