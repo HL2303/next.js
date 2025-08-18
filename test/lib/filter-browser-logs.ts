@@ -1,15 +1,19 @@
 /**
  * Filters out browser debug logs from CLI output
  * Browser logs are prefixed with [browser] when browserDebugInfoInTerminal is enabled
+ * The [browser] prefix is wrapped with cyan ANSI color codes
  */
 export function filterBrowserLogs(output: string): string {
-  // Simple approach: just filter lines that start with [browser]
-  // If we're slicing in the middle of a line, we accept that we might
-  // occasionally see partial browser log lines, but this is safer than
-  // trying to detect fragments which can cause false positives
+  // Browser logs include cyan color codes around [browser]
+  // The pattern matches lines that contain [browser] with or without ANSI codes
+  // We check for [browser] anywhere in the line to handle both colored and stripped output
   return output
     .split('\n')
-    .filter((line) => !line.startsWith('[browser]'))
+    .filter((line) => {
+      // Check for [browser] with optional ANSI color codes
+      // This handles both raw [browser] and cyan-colored [browser]
+      return !line.includes('[browser]')
+    })
     .join('\n')
 }
 
