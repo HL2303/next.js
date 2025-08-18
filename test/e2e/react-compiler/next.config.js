@@ -5,6 +5,7 @@ const nextConfig = {
   experimental: {
     reactCompiler: true,
   },
+  browserDebugInfoInTerminal: false,
 }
 
 module.exports = nextConfig
