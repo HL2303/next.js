@@ -3,6 +3,7 @@ import { NextInstance } from 'e2e-utils'
 import { fetchViaHTTP, File, nextBuild } from 'next-test-utils'
 import { join } from 'path'
 import stripAnsi from 'strip-ansi'
+import { filterBrowserLogs } from '../../lib/filter-browser-logs'
 
 const pagePath = 'pages/index.jsx'
 const apiPath = 'pages/api/edge.js'
@@ -37,8 +38,8 @@ const apiPath = 'pages/api/edge.js'
         await next.start()
         const res = await fetchViaHTTP(next.url, `/api/edge`)
         expect(res.status).toEqual(200)
-        expect(next.cliOutput).not.toInclude('error')
-        expect(next.cliOutput).not.toInclude('warn')
+        expect(filterBrowserLogs(next.cliOutput)).not.toInclude('error')
+        expect(filterBrowserLogs(next.cliOutput)).not.toInclude('warn')
       })
 
       it('warns about API route using experimental-edge runtime', async () => {
@@ -52,7 +53,7 @@ const apiPath = 'pages/api/edge.js'
         await next.start()
         const res = await fetchViaHTTP(next.url, `/api/edge`)
         expect(res.status).toEqual(200)
-        expect(next.cliOutput).not.toInclude('error')
+        expect(filterBrowserLogs(next.cliOutput)).not.toInclude('error')
         expect(stripAnsi(next.cliOutput)).toInclude(
           `/api/edge provided runtime 'experimental-edge'. It can be updated to 'edge' instead.`
         )
@@ -68,7 +69,7 @@ const apiPath = 'pages/api/edge.js'
         await next.start()
         const res = await fetchViaHTTP(next.url, `/`)
         expect(res.status).toEqual(200)
-        expect(next.cliOutput).not.toInclude('error')
+        expect(filterBrowserLogs(next.cliOutput)).not.toInclude('error')
         expect(stripAnsi(next.cliOutput)).toInclude(
           `You are using an experimental edge runtime, the API might change.`
         )
@@ -88,7 +89,7 @@ const apiPath = 'pages/api/edge.js'
         expect(stripAnsi(next.cliOutput)).toInclude(
           `Page / provided runtime 'edge', the edge runtime for rendering is currently experimental. Use runtime 'experimental-edge' instead.`
         )
-        expect(next.cliOutput).not.toInclude('warn')
+        expect(filterBrowserLogs(next.cliOutput)).not.toInclude('warn')
       })
     })
   } else if ((global as any).isNextStart) {
