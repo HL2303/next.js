@@ -1,5 +1,6 @@
 module.exports = (phase) => {
   return {
+    browserDebugInfoInTerminal: false,
     output: 'export',
     distDir: 'out',
     publicRuntimeConfig: {
