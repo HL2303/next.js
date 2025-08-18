@@ -19,7 +19,7 @@ const appDir = join(__dirname, '..')
         'caused by plugins in Compilation.hooks.processAssets'
       )
       expect(stderr).toContain('Maximum call stack size exceeded')
-      expect(stderr).toContain('next.config.js:7')
+      expect(stderr).toContain('next.config.js:8')
     })
   }
 )
