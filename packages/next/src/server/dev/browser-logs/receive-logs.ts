@@ -446,7 +446,9 @@ export async function handleLog(
   distDir: string,
   config: NextConfigComplete['browserDebugInfoInTerminal']
 ): Promise<void> {
-  const browserPrefix = cyan('[browser]')
+  // When running tests, add a unique marker to help filter browser logs
+  const testMarker = process.env.__NEXT_TEST_BROWSER_LOG_MARKER || ''
+  const browserPrefix = cyan('[browser]') + testMarker
 
   for (const entry of entries) {
     try {

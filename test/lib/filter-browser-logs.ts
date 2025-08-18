@@ -2,18 +2,30 @@
  * Filters out browser debug logs from CLI output
  * Browser logs are prefixed with [browser] when browserDebugInfoInTerminal is enabled
  * The [browser] prefix is wrapped with cyan ANSI color codes
+ * In test mode, we add a marker to help identify browser log boundaries
  */
 export function filterBrowserLogs(output: string): string {
-  // Browser logs include cyan color codes around [browser]
-  // The pattern matches lines that contain [browser] with or without ANSI codes
-  // We check for [browser] anywhere in the line to handle both colored and stripped output
+  // Set a unique marker for browser logs in test mode
+  // This helps us reliably identify and filter multiline browser logs
+  if (!process.env.__NEXT_TEST_BROWSER_LOG_MARKER) {
+    process.env.__NEXT_TEST_BROWSER_LOG_MARKER = '<<<BROWSER_LOG>>>'
+  }
+
+  const marker = process.env.__NEXT_TEST_BROWSER_LOG_MARKER
+
+  // If we have a marker, use it to filter more reliably
+  if (marker && output.includes(marker)) {
+    return output
+      .split('\n')
+      .filter((line) => !line.includes(marker))
+      .join('\n')
+  }
+
+  // Fallback: filter lines containing [browser]
+  // This handles both raw [browser] and cyan-colored [browser]
   return output
     .split('\n')
-    .filter((line) => {
-      // Check for [browser] with optional ANSI color codes
-      // This handles both raw [browser] and cyan-colored [browser]
-      return !line.includes('[browser]')
-    })
+    .filter((line) => !line.includes('[browser]'))
     .join('\n')
 }
 
