@@ -75,13 +75,13 @@ describe('Cache Components Dev Errors', () => {
 
     await retry(() => {
       const cliOutput = stripAnsi(
-        filterBrowserLogs(next.cliOutput).slice(cliOutputLength)
+        filterBrowserLogs(next.cliOutput.slice(cliOutputLength))
       )
       expect(cliOutput).toContain('GET /top-level-error 500')
     })
 
     expect(
-      filterBrowserLogs(next.cliOutput).slice(cliOutputLength)
+      filterBrowserLogs(next.cliOutput.slice(cliOutputLength))
     ).not.toContain('unhandledRejection')
   })
 
@@ -91,13 +91,13 @@ describe('Cache Components Dev Errors', () => {
     const browser = await next.browser('/no-accessed-data')
 
     await retry(() => {
-      expect(filterBrowserLogs(next.cliOutput).slice(outputIndex)).toContain(
+      expect(filterBrowserLogs(next.cliOutput.slice(outputIndex))).toContain(
         'Error: Route "/no-accessed-data"'
       )
     })
 
     expect(
-      stripAnsi(filterBrowserLogs(next.cliOutput).slice(outputIndex))
+      stripAnsi(filterBrowserLogs(next.cliOutput.slice(outputIndex)))
     ).toContain(
       `\nError: Route "/no-accessed-data": ` +
         `A component accessed data, headers, params, searchParams, or a short-lived cache without a Suspense boundary nor a "use cache" above it. ` +

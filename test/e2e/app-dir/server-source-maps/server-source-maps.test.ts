@@ -323,7 +323,7 @@ describe('app-dir - server source maps', () => {
       })
 
       const cliOutput = stripAnsi(
-        filterBrowserLogs(next.cliOutput).slice(outputIndex)
+        filterBrowserLogs(next.cliOutput.slice(outputIndex))
       )
       expect(cliOutput).toContain(
         '\n ⨯ Error: ssr-throw' +
@@ -446,7 +446,7 @@ describe('app-dir - server source maps', () => {
         )
       })
       const cliOutput = stripAnsi(
-        filterBrowserLogs(next.cliOutput).slice(outputIndex)
+        filterBrowserLogs(next.cliOutput.slice(outputIndex))
       )
       if (isTurbopack) {
         expect(cliOutput).toContain(

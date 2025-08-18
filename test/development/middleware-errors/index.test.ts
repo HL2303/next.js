@@ -239,7 +239,7 @@ describe('middleware - development errors', () => {
       await next.patchFile('middleware.js', `export default function () {}`)
 
       retry(() => {
-        expect(filterBrowserLogs(next.cliOutput).slice(lengthOfLogs)).toContain(
+        expect(filterBrowserLogs(next.cliOutput.slice(lengthOfLogs))).toContain(
           '✓ Compiled'
         )
       }, 10000) // middleware rebuild takes a while in CI
