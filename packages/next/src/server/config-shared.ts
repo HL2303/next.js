@@ -1461,7 +1461,7 @@ export const defaultConfig = Object.freeze({
   devIndicators: {
     position: 'bottom-left',
   },
-  browserDebugInfoInTerminal: true,
+  browserDebugInfoInTerminal: false,
   onDemandEntries: {
     maxInactiveAge: 60 * 1000,
     pagesBufferLength: 5,
