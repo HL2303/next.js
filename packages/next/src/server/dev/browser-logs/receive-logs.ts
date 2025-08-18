@@ -446,9 +446,10 @@ export async function handleLog(
   distDir: string,
   config: NextConfigComplete['browserDebugInfoInTerminal']
 ): Promise<void> {
-  // When running tests, add a unique marker to help filter browser logs
-  const testMarker = process.env.__NEXT_TEST_BROWSER_LOG_MARKER || ''
-  const browserPrefix = cyan('[browser]') + testMarker
+  const browserPrefix = cyan('[browser]')
+  const browserSuffix = process.env.__NEXT_TEST_MODE
+    ? cyan('[browser end]')
+    : ''
 
   for (const entry of entries) {
     try {
@@ -458,15 +459,24 @@ export async function handleLog(
             case 'table': {
               // timeout based abort on source mapping result
               await handleTable(entry, browserPrefix, ctx, distDir, config)
+              if (browserSuffix) {
+                console.log(browserSuffix)
+              }
               break
             }
             // ignore frames
             case 'trace': {
               await handleTrace(entry, browserPrefix, ctx, distDir, config)
+              if (browserSuffix) {
+                console.log(browserSuffix)
+              }
               break
             }
             case 'dir': {
               await handleDir(entry, browserPrefix, ctx, distDir, config)
+              if (browserSuffix) {
+                console.log(browserSuffix)
+              }
               break
             }
             case 'dirxml': {
@@ -495,6 +505,9 @@ export async function handleLog(
                 distDir,
                 config
               )
+              if (browserSuffix) {
+                console.log(browserSuffix)
+              }
               break
             }
             default: {
@@ -512,6 +525,9 @@ export async function handleLog(
             config
           )
           forwardConsole.error(browserPrefix, ...consoleArgs)
+          if (browserSuffix) {
+            console.log(browserSuffix)
+          }
           break
         }
         // formatted error is an explicit error event (rejections, uncaught errors)
@@ -522,6 +538,9 @@ export async function handleLog(
             distDir
           )
           forwardConsole.error(browserPrefix, ...formattedArgs)
+          if (browserSuffix) {
+            console.log(browserSuffix)
+          }
           break
         }
         default: {
