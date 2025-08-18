@@ -318,7 +318,9 @@ export function getDefineEnv({
     'process.env.__NEXT_BROWSER_DEBUG_INFO_IN_TERMINAL': JSON.stringify(
       config.experimental?.browserDebugInfoInTerminal ??
         config.browserDebugInfoInTerminal ??
-        false
+        (process.env.NODE_ENV === 'test' || process.env.__NEXT_TEST_MODE
+          ? false
+          : true)
     ),
 
     // The devtools need to know whether or not to show an option to clear the
