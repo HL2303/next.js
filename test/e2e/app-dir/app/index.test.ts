@@ -2,6 +2,7 @@ import { nextTestSetup } from 'e2e-utils'
 import { check, retry, waitFor } from 'next-test-utils'
 import cheerio from 'cheerio'
 import stripAnsi from 'strip-ansi'
+import { filterBrowserLogs } from '../../../lib/filter-browser-logs'
 import {
   NEXT_RSC_UNION_QUERY,
   RSC_HEADER,
@@ -255,8 +256,9 @@ describe('app dir - basic', () => {
     it('should not have duplicate config warnings', async () => {
       await next.fetch('/')
       expect(
-        stripAnsi(next.cliOutput).match(/Experiments \(use with caution\):/g)
-          .length
+        stripAnsi(filterBrowserLogs(next.cliOutput)).match(
+          /Experiments \(use with caution\):/g
+        ).length
       ).toBe(1)
     })
   }

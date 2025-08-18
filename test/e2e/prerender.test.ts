@@ -18,6 +18,7 @@ import {
 } from 'next-test-utils'
 import webdriver from 'next-webdriver'
 import stripAnsi from 'strip-ansi'
+import { filterBrowserLogs } from '../lib/filter-browser-logs'
 
 const isReact18 = parseInt(process.env.NEXT_TEST_REACT_VERSION) === 18
 
@@ -1982,7 +1983,9 @@ describe('Prerender', () => {
         })
 
         expect(res.status).toBe(200)
-        expect(stripAnsi(next.cliOutput)).not.toContain('hasHeader')
+        expect(stripAnsi(filterBrowserLogs(next.cliOutput))).not.toContain(
+          'hasHeader'
+        )
       })
 
       it('should revalidate on-demand revalidate with preview cookie', async () => {

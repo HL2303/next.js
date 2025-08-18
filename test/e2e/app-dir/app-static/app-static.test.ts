@@ -11,6 +11,7 @@ import {
   waitFor,
 } from 'next-test-utils'
 import stripAnsi from 'strip-ansi'
+import { filterBrowserLogs } from '../../../lib/filter-browser-logs'
 
 const glob = promisify(globOrig)
 
@@ -2774,7 +2775,7 @@ describe('app-dir static/dynamic handling', () => {
     })
 
     it('should output debug info for static bailouts', async () => {
-      const cleanedOutput = stripAnsi(next.cliOutput)
+      const cleanedOutput = stripAnsi(filterBrowserLogs(next.cliOutput))
 
       expect(cleanedOutput).toContain(
         'Static generation failed due to dynamic usage on /force-static, reason: headers'
@@ -3157,7 +3158,9 @@ describe('app-dir static/dynamic handling', () => {
         expect(html).toMatch(/id:.*?static-bailout-1/)
 
         if (isNextStart) {
-          expect(stripAnsi(next.cliOutput).substring(outputIndex)).not.toMatch(
+          expect(
+            stripAnsi(filterBrowserLogs(next.cliOutput)).substring(outputIndex)
+          ).not.toMatch(
             /Page changed from static to dynamic at runtime \/static-to-dynamic-error-forced\/static-bailout-1, reason: cookies/
           )
         }
@@ -3193,7 +3196,9 @@ describe('app-dir static/dynamic handling', () => {
         expect(res.status).toBe(500)
 
         if (isNextStart) {
-          expect(stripAnsi(next.cliOutput).substring(outputIndex)).not.toMatch(
+          expect(
+            stripAnsi(filterBrowserLogs(next.cliOutput)).substring(outputIndex)
+          ).not.toMatch(
             /Page with dynamic = "error" encountered dynamic data method on \/dynamic-error\/static-bailout-1/
           )
         }
@@ -3332,7 +3337,7 @@ describe('app-dir static/dynamic handling', () => {
 
       if (isNextDev) {
         await check(() => {
-          const matches = stripAnsi(next.cliOutput).match(
+          const matches = stripAnsi(filterBrowserLogs(next.cliOutput)).match(
             /partial-gen-params fetch ([\d]{1,})/
           )
 
@@ -4461,7 +4466,11 @@ describe('app-dir static/dynamic handling', () => {
           expect(
             next.cliOutput.substring(cliOutputStart).match(/Load data/g).length
           ).toBe(2)
-          expect(stripAnsi(next.cliOutput.substring(cliOutputStart))).toMatch(
+          expect(
+            stripAnsi(
+              filterBrowserLogs(next.cliOutput.substring(cliOutputStart))
+            )
+          ).toMatch(
             /Failed to set Next.js data cache for http:\/\/localhost:.*?\/api\/large-data, items over 2MB can not be cached/
           )
           return 'success'

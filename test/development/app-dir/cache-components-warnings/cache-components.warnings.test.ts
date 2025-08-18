@@ -1,4 +1,5 @@
 import { nextTestSetup } from 'e2e-utils'
+// import { filterBrowserLogs } from '../../../lib/filter-browser-logs' // Not used in skipped test
 
 // I am temporarily deactivating these tests. We turned off the dev time warning but will reintroduce it when we add in dev-time prerendering.
 // The tests will likely have to change but I'd like to keep the fixture and assertions as a starting point.

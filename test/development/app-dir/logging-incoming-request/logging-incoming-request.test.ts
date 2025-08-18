@@ -1,5 +1,6 @@
 import { nextTestSetup } from 'e2e-utils'
 import { retry } from 'next-test-utils'
+import { filterBrowserLogs } from '../../../lib/filter-browser-logs'
 
 describe('logging-incoming-request', () => {
   const { next } = nextTestSetup({
@@ -23,10 +24,11 @@ describe('logging-incoming-request', () => {
     expect(response.status).toBe(200)
 
     await retry(() => {
-      expect(next.cliOutput).not.toContain('GET /hello')
-      expect(next.cliOutput).not.toContain('GET /non-existent')
-      expect(next.cliOutput).not.toContain('GET /_next/static/test.js')
-      expect(next.cliOutput).toContain('GET /foo')
+      const filteredOutput = filterBrowserLogs(next.cliOutput)
+      expect(filteredOutput).not.toContain('GET /hello')
+      expect(filteredOutput).not.toContain('GET /non-existent')
+      expect(filteredOutput).not.toContain('GET /_next/static/test.js')
+      expect(filteredOutput).toContain('GET /foo')
     })
   })
 })

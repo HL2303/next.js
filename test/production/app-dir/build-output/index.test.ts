@@ -1,6 +1,7 @@
 import { nextTestSetup } from 'e2e-utils'
 import stripAnsi from 'strip-ansi'
 import { outdent } from 'outdent'
+import { filterBrowserLogs } from '../../../lib/filter-browser-logs'
 
 describe('production - app dir - build output', () => {
   const { next } = nextTestSetup({
@@ -9,7 +10,7 @@ describe('production - app dir - build output', () => {
 
   let output = ''
   beforeAll(() => {
-    output = stripAnsi(next.cliOutput)
+    output = stripAnsi(filterBrowserLogs(next.cliOutput))
   })
 
   it('should only log app routes', async () => {

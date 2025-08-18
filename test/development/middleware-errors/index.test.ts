@@ -1,6 +1,7 @@
 import { assertNoRedbox, check, retry } from 'next-test-utils'
 import stripAnsi from 'strip-ansi'
 import { nextTestSetup } from 'e2e-utils'
+import { filterBrowserLogs } from '../../lib/filter-browser-logs'
 
 describe('middleware - development errors', () => {
   const { next, isTurbopack } = nextTestSetup({
@@ -29,9 +30,9 @@ describe('middleware - development errors', () => {
       await next.fetch('/')
 
       await retry(() => {
-        expect(stripAnsi(next.cliOutput)).toContain('boom')
+        expect(stripAnsi(filterBrowserLogs(next.cliOutput))).toContain('boom')
       })
-      expect(stripAnsi(next.cliOutput)).toContain(
+      expect(stripAnsi(filterBrowserLogs(next.cliOutput))).toContain(
         isTurbopack
           ? '\n ⨯ Error: boom' +
               // TODO(veil): Sourcemap to original name i.e. "default"
@@ -41,7 +42,7 @@ describe('middleware - development errors', () => {
               '\n    at default (middleware.js:3:15)' +
               '\n  1 |'
       )
-      expect(stripAnsi(next.cliOutput)).toContain(
+      expect(stripAnsi(filterBrowserLogs(next.cliOutput))).toContain(
         '' +
           "\n> 3 |         throw new Error('boom')" +
           '\n    |               ^'
@@ -109,11 +110,11 @@ describe('middleware - development errors', () => {
       await next.fetch('/')
 
       await retry(() => {
-        expect(stripAnsi(next.cliOutput)).toContain(
+        expect(stripAnsi(filterBrowserLogs(next.cliOutput))).toContain(
           'unhandledRejection: Error: async boom!'
         )
       })
-      expect(stripAnsi(next.cliOutput)).toContain(
+      expect(stripAnsi(filterBrowserLogs(next.cliOutput))).toContain(
         isTurbopack
           ? ' ⨯ unhandledRejection:  Error: async boom!' +
               '\n    at throwError (middleware.js:4:15)' +
@@ -125,7 +126,7 @@ describe('middleware - development errors', () => {
               '\n    at default (middleware.js:7:9)' +
               "\n  2 |       import { NextResponse } from 'next/server'"
       )
-      expect(stripAnsi(next.cliOutput)).toContain(
+      expect(stripAnsi(filterBrowserLogs(next.cliOutput))).toContain(
         '' +
           "\n> 4 |         throw new Error('async boom!')" +
           '\n    |               ^'
@@ -158,17 +159,19 @@ describe('middleware - development errors', () => {
       await next.fetch('/')
 
       await retry(() => {
-        expect(stripAnsi(next.cliOutput)).toContain('Dynamic Code Evaluation')
+        expect(stripAnsi(filterBrowserLogs(next.cliOutput))).toContain(
+          'Dynamic Code Evaluation'
+        )
       })
       if (isTurbopack) {
         // Locally, prefixes the "test is not defined".
         // In CI, it prefixes "Dynamic Code Evaluation".
-        expect(stripAnsi(next.cliOutput)).toContain(
+        expect(stripAnsi(filterBrowserLogs(next.cliOutput))).toContain(
           // TODO(veil): Should be sourcemapped
           '\n    at __TURBOPACK__default__export__ (.next/'
         )
       }
-      expect(stripAnsi(next.cliOutput)).toContain(
+      expect(stripAnsi(filterBrowserLogs(next.cliOutput))).toContain(
         isTurbopack
           ? '\n ⨯ Error [ReferenceError]: test is not defined' +
               '\n    at eval (middleware.js:4:9)' +
@@ -182,7 +185,7 @@ describe('middleware - development errors', () => {
               '\n    at default (middleware.js:4:9)' +
               "\n  2 |       import { NextResponse } from 'next/server'"
       )
-      expect(stripAnsi(next.cliOutput)).toContain(
+      expect(stripAnsi(filterBrowserLogs(next.cliOutput))).toContain(
         isTurbopack
           ? "\n ⚠ DynamicCodeEvaluationWarning: Dynamic Code Evaluation (e. g. 'eval', 'new Function') not allowed in Edge Runtime" +
               '\nLearn More: https://nextjs.org/docs/messages/edge-dynamic-code-evaluation' +
@@ -236,7 +239,9 @@ describe('middleware - development errors', () => {
       await next.patchFile('middleware.js', `export default function () {}`)
 
       retry(() => {
-        expect(next.cliOutput.slice(lengthOfLogs)).toContain('✓ Compiled')
+        expect(filterBrowserLogs(next.cliOutput.slice(lengthOfLogs))).toContain(
+          '✓ Compiled'
+        )
       }, 10000) // middleware rebuild takes a while in CI
 
       await assertNoRedbox(browser)
@@ -261,9 +266,11 @@ describe('middleware - development errors', () => {
       await next.fetch('/')
 
       await retry(() => {
-        expect(stripAnsi(next.cliOutput)).toContain(`Error: booooom!`)
+        expect(stripAnsi(filterBrowserLogs(next.cliOutput))).toContain(
+          `Error: booooom!`
+        )
       })
-      expect(stripAnsi(next.cliOutput)).toContain(
+      expect(stripAnsi(filterBrowserLogs(next.cliOutput))).toContain(
         isTurbopack
           ? '\n ⨯ Error: booooom!' +
               // TODO(veil): Should be sourcemapped
@@ -347,7 +354,7 @@ describe('middleware - development errors', () => {
     it('logs the error correctly', async () => {
       await next.fetch('/')
       await check(
-        () => stripAnsi(next.cliOutput),
+        () => stripAnsi(filterBrowserLogs(next.cliOutput)),
         new RegExp(`unhandledRejection: Error: you shall see me`, 'm')
       )
       // expect(output).not.toContain(
@@ -380,9 +387,9 @@ describe('middleware - development errors', () => {
 
     it('logs the error correctly', async () => {
       await next.fetch('/')
-      const output = stripAnsi(next.cliOutput)
+      const output = stripAnsi(filterBrowserLogs(next.cliOutput))
       await check(
-        () => stripAnsi(next.cliOutput),
+        () => stripAnsi(filterBrowserLogs(next.cliOutput)),
         new RegExp(
           ` uncaughtException: Error: This file asynchronously fails while loading`,
           'm'

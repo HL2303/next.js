@@ -3,6 +3,7 @@ import * as path from 'path'
 import { nextTestSetup } from 'e2e-utils'
 import stripAnsi from 'strip-ansi'
 import { retry } from 'next-test-utils'
+import { filterBrowserLogs } from '../../../lib/filter-browser-logs'
 
 function normalizeCliOutput(output: string) {
   return stripAnsi(output)
@@ -56,7 +57,9 @@ describe('app-dir - server source maps edge runtime', () => {
         expect(next.cliOutput.slice(outputIndex)).toContain('Error: ssr-throw')
       })
 
-      const cliOutput = stripAnsi(next.cliOutput.slice(outputIndex))
+      const cliOutput = stripAnsi(
+        filterBrowserLogs(next.cliOutput.slice(outputIndex))
+      )
       expect(cliOutput).toContain(
         '\n ⨯ Error: ssr-throw' +
           '\n    at throwError (app/ssr-throw/page.js:4:9)' +
@@ -86,7 +89,9 @@ describe('app-dir - server source maps edge runtime', () => {
         expect(next.cliOutput.slice(outputIndex)).toMatch(/Error: rsc-throw/)
       })
 
-      const cliOutput = stripAnsi(next.cliOutput.slice(outputIndex))
+      const cliOutput = stripAnsi(
+        filterBrowserLogs(next.cliOutput.slice(outputIndex))
+      )
       expect(cliOutput).toContain(
         '\n ⨯ Error: rsc-throw' +
           '\n    at throwError (app/rsc-throw/page.js:2:9)' +

@@ -1,5 +1,6 @@
 import { nextTestSetup } from 'e2e-utils'
 import stripAnsi from 'strip-ansi'
+import { filterBrowserLogs } from '../../../lib/filter-browser-logs'
 
 describe('build-error-logs', () => {
   const { next, isTurbopack } = nextTestSetup({
@@ -8,7 +9,7 @@ describe('build-error-logs', () => {
 
   it('should only log error a single time', async () => {
     await next.fetch('/')
-    const output = stripAnsi(next.cliOutput)
+    const output = stripAnsi(filterBrowserLogs(next.cliOutput))
 
     expect(output).toContain('Module not found')
 

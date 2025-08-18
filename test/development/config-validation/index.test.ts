@@ -1,5 +1,6 @@
 import stripAnsi from 'strip-ansi'
 import { nextTestSetup } from 'e2e-utils'
+import { filterBrowserLogs } from '../../lib/filter-browser-logs'
 
 describe('config validation - validation only runs once', () => {
   const { next } = nextTestSetup({
@@ -20,7 +21,7 @@ describe('config validation - validation only runs once', () => {
 
   it('should validate config only once in root process', async () => {
     await next.fetch('/')
-    const output = stripAnsi(next.cliOutput)
+    const output = stripAnsi(filterBrowserLogs(next.cliOutput))
     const validationHeaderMatches = output.match(
       /Invalid next\.config\.js options detected:/g
     )

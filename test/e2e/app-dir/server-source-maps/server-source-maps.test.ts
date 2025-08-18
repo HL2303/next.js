@@ -3,6 +3,7 @@ import * as path from 'path'
 import { nextTestSetup } from 'e2e-utils'
 import stripAnsi from 'strip-ansi'
 import { retry } from 'next-test-utils'
+import { filterBrowserLogs } from '../../../lib/filter-browser-logs'
 
 function normalizeCliOutput(output: string) {
   return (
@@ -321,7 +322,9 @@ describe('app-dir - server source maps', () => {
         expect(next.cliOutput.slice(outputIndex)).toContain('Error: ssr-throw')
       })
 
-      const cliOutput = stripAnsi(next.cliOutput.slice(outputIndex))
+      const cliOutput = stripAnsi(
+        filterBrowserLogs(next.cliOutput.slice(outputIndex))
+      )
       expect(cliOutput).toContain(
         '\n ⨯ Error: ssr-throw' +
           '\n    at throwError (app/ssr-throw/Thrower.js:4:9)' +
@@ -442,7 +445,9 @@ describe('app-dir - server source maps', () => {
           'Error: module-evaluation'
         )
       })
-      const cliOutput = stripAnsi(next.cliOutput.slice(outputIndex))
+      const cliOutput = stripAnsi(
+        filterBrowserLogs(next.cliOutput.slice(outputIndex))
+      )
       if (isTurbopack) {
         expect(cliOutput).toContain(
           '' +

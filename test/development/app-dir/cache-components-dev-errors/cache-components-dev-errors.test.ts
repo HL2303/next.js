@@ -8,6 +8,7 @@ import {
 } from 'next-test-utils'
 import { createSandbox } from 'development-sandbox'
 import { outdent } from 'outdent'
+import { filterBrowserLogs } from '../../../lib/filter-browser-logs'
 
 describe('Cache Components Dev Errors', () => {
   const { isTurbopack, next } = nextTestSetup({
@@ -73,13 +74,15 @@ describe('Cache Components Dev Errors', () => {
     expect(res.status).toBe(500)
 
     await retry(() => {
-      const cliOutput = stripAnsi(next.cliOutput.slice(cliOutputLength))
+      const cliOutput = stripAnsi(
+        filterBrowserLogs(next.cliOutput.slice(cliOutputLength))
+      )
       expect(cliOutput).toContain('GET /top-level-error 500')
     })
 
-    expect(next.cliOutput.slice(cliOutputLength)).not.toContain(
-      'unhandledRejection'
-    )
+    expect(
+      filterBrowserLogs(next.cliOutput.slice(cliOutputLength))
+    ).not.toContain('unhandledRejection')
   })
 
   // NOTE: when update this snapshot, use `pnpm build` in packages/next to avoid next source code get mapped to source.
@@ -88,12 +91,14 @@ describe('Cache Components Dev Errors', () => {
     const browser = await next.browser('/no-accessed-data')
 
     await retry(() => {
-      expect(next.cliOutput.slice(outputIndex)).toContain(
+      expect(filterBrowserLogs(next.cliOutput.slice(outputIndex))).toContain(
         'Error: Route "/no-accessed-data"'
       )
     })
 
-    expect(stripAnsi(next.cliOutput.slice(outputIndex))).toContain(
+    expect(
+      stripAnsi(filterBrowserLogs(next.cliOutput.slice(outputIndex)))
+    ).toContain(
       `\nError: Route "/no-accessed-data": ` +
         `A component accessed data, headers, params, searchParams, or a short-lived cache without a Suspense boundary nor a "use cache" above it. ` +
         `See more info: https://nextjs.org/docs/messages/next-prerender-missing-suspense` +

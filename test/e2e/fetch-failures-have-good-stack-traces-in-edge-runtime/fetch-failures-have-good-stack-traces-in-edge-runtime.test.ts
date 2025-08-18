@@ -2,6 +2,7 @@ import { nextTestSetup } from 'e2e-utils'
 import webdriver from 'next-webdriver'
 import { check } from 'next-test-utils'
 import stripAnsi from 'strip-ansi'
+import { filterBrowserLogs } from '../../lib/filter-browser-logs'
 
 describe('fetch failures have good stack traces in edge runtime', () => {
   const { next, isNextStart, isNextDev, skipped } = nextTestSetup({
@@ -28,7 +29,9 @@ describe('fetch failures have good stack traces in edge runtime', () => {
         )
       } else if (isNextDev) {
         // eslint-disable-next-line jest/no-standalone-expect
-        expect(stripAnsi(next.cliOutput.slice(outputIndex))).toContain(
+        expect(
+          stripAnsi(filterBrowserLogs(next.cliOutput.slice(outputIndex)))
+        ).toContain(
           '' +
             '\n ⨯ Error [TypeError]: fetch failed' +
             '\n    at anotherFetcher (src/fetcher.js:6:16)' +
@@ -70,7 +73,7 @@ describe('fetch failures have good stack traces in edge runtime', () => {
     await webdriver(next.url, '/api/unknown-domain-no-await')
 
     await check(
-      () => stripAnsi(next.cliOutput),
+      () => stripAnsi(filterBrowserLogs(next.cliOutput)),
       /at.+\/pages\/api\/unknown-domain-no-await.ts:4/
     )
   })
