@@ -1,6 +1,7 @@
 const ASSET_PREFIX = '/custom-asset-prefix'
 
 module.exports = {
+  browserDebugInfoInTerminal: false,
   assetPrefix: ASSET_PREFIX,
   i18n: {
     locales: ['en-US'],

@@ -1,4 +1,5 @@
 module.exports = {
+  browserDebugInfoInTerminal: false,
   reactStrictMode: true,
   async rewrites() {
     return [

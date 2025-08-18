@@ -1,4 +1,5 @@
 const nextConfig = {
+  browserDebugInfoInTerminal: false,
   pageExtensions: ['page.jsx', 'page.js'],
 }
 

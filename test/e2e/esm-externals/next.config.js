@@ -1,4 +1,5 @@
 module.exports = {
+  browserDebugInfoInTerminal: false,
   turbopack: {
     resolveAlias: {
       'preact/compat': 'react',

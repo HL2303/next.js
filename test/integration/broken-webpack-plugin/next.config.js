@@ -7,6 +7,7 @@ class BrokenPlugin {
 }
 
 module.exports = {
+  browserDebugInfoInTerminal: false,
   webpack(config, { isServer }) {
     if (!isServer) {
       config.plugins.push(new BrokenPlugin())

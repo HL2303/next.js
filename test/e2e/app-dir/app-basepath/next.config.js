@@ -1,4 +1,5 @@
 module.exports = {
+  browserDebugInfoInTerminal: false,
   basePath: '/base',
   async rewrites() {
     return [

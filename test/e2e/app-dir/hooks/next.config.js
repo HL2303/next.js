@@ -1,4 +1,5 @@
 module.exports = {
+  browserDebugInfoInTerminal: false,
   rewrites: async () => {
     return {
       afterFiles: [

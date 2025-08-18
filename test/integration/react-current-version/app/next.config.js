@@ -1,4 +1,5 @@
 module.exports = {
+  browserDebugInfoInTerminal: false,
   reactStrictMode: true,
   images: {
     deviceSizes: [480, 1024, 1600, 2000],

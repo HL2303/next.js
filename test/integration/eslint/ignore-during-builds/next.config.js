@@ -1,4 +1,5 @@
 module.exports = {
+  browserDebugInfoInTerminal: false,
   eslint: {
     // !! WARN !!
     // Dangerously allow production builds to successfully complete even if

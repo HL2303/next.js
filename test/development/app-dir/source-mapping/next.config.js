@@ -3,6 +3,7 @@
  */
 
 const nextConfig = {
+  browserDebugInfoInTerminal: false,
   assetPrefix: '/assets',
   rewrites() {
     return {

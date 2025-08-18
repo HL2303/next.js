@@ -4,6 +4,7 @@ const path = require('node:path')
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
+  browserDebugInfoInTerminal: false,
   turbopack: {
     rules: {
       '*.ts': {

@@ -1,4 +1,5 @@
 module.exports = {
+  browserDebugInfoInTerminal: false,
   /**
    * The "assetPrefix" here doesn't needs to be real as we doesn't load the page in the browser in this test,
    * we only care about if all assets prefixed with the "assetPrefix" are having correct "crossOrigin".

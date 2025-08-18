@@ -1,6 +1,8 @@
 /**
  * @type {import('next').NextConfig}
  */
-const nextConfig = {}
+const nextConfig = {
+  browserDebugInfoInTerminal: false,
+}
 
 module.exports = nextConfig

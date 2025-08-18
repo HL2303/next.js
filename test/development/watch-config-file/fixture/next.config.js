@@ -1,4 +1,5 @@
 const nextConfig = {
+  browserDebugInfoInTerminal: false,
   reactStrictMode: true,
 }
 

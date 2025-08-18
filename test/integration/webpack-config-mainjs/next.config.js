@@ -1,4 +1,5 @@
 module.exports = {
+  browserDebugInfoInTerminal: false,
   webpack: function (cfg) {
     const originalEntry = cfg.entry
     cfg.entry = async () => {

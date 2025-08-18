@@ -1,4 +1,5 @@
 const config = {
+  browserDebugInfoInTerminal: false,
   webpack: (config, { defaultLoaders }) => {
     config.module.rules.push({
       test: /\.css$/,

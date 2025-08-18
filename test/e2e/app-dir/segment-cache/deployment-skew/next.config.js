@@ -7,6 +7,7 @@ if (!BUILD_ID) {
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
+  browserDebugInfoInTerminal: false,
   experimental: {
     clientSegmentCache: true,
   },

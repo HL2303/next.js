@@ -1,4 +1,5 @@
 module.exports = {
+  browserDebugInfoInTerminal: false,
   env: {
     ...(process.env.ENABLE_ENV_FAIL_UNDERSCORE
       ? {

@@ -1,6 +1,7 @@
 process.env.NEXT_PUBLIC_NEW_NEXT_CONFIG_VALUE = 'hello set in next.config.js'
 
 module.exports = {
+  browserDebugInfoInTerminal: false,
   cleanDistDir: false,
   // update me
   env: {

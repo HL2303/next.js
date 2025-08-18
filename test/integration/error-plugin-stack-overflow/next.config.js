@@ -1,4 +1,5 @@
 module.exports = {
+  browserDebugInfoInTerminal: false,
   webpack(config) {
     config.plugins.push((c) => {
       c.hooks.compilation.tap('next.config.js', (compilation) => {

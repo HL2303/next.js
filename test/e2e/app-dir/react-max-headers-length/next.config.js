@@ -2,6 +2,7 @@
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
+  browserDebugInfoInTerminal: false,
   reactMaxHeadersLength: process.env.TEST_REACT_MAX_HEADERS_LENGTH
     ? parseInt(process.env.TEST_REACT_MAX_HEADERS_LENGTH)
     : undefined,

@@ -2,6 +2,7 @@ const { join } = require('path')
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  browserDebugInfoInTerminal: false,
   reactStrictMode: true,
   turbopack: {
     rules: {
