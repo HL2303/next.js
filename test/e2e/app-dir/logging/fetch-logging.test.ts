@@ -4,6 +4,7 @@ import stripAnsi from 'strip-ansi'
 import { retry } from 'next-test-utils'
 import { nextTestSetup } from 'e2e-utils'
 import { createSandbox } from 'development-sandbox'
+import { filterBrowserLogs } from '../../../lib/filter-browser-logs'
 
 const cacheReasonRegex = /Cache (missed|skipped) reason: /
 
@@ -16,7 +17,7 @@ interface ParsedLog {
 }
 
 function parseLogsFromCli(cliOutput: string) {
-  const logs = stripAnsi(cliOutput)
+  const logs = stripAnsi(filterBrowserLogs(cliOutput))
     .split('\n')
     .filter((log) => cacheReasonRegex.test(log) || log.includes('GET'))
 
@@ -71,7 +72,9 @@ describe('app-dir - fetch logging', () => {
       await retry(async () => {
         headline = await browser.waitForElementByCss('h1').text()
         expect(headline).toBe('Hello Test!')
-        const logs = stripAnsi(next.cliOutput.slice(outputIndex))
+        const logs = stripAnsi(
+          filterBrowserLogs(next.cliOutput.slice(outputIndex))
+        )
         expect(logs).toInclude(' GET /fetch-no-store')
         expect(logs).not.toInclude(` │ GET `)
         // TODO: remove custom duration in case we increase the default.
@@ -102,7 +105,9 @@ describe('app-dir - logging', () => {
         await next.fetch('/default-cache')
 
         await retry(() => {
-          const logs = stripAnsi(next.cliOutput.slice(outputIndex))
+          const logs = stripAnsi(
+            filterBrowserLogs(next.cliOutput.slice(outputIndex))
+          )
           if (isNextDev) {
             expect(logs).toContain('GET /default-cache 200')
           } else {
@@ -172,7 +177,9 @@ describe('app-dir - logging', () => {
             : 'https://next-data-api-en../api/random'
 
           await retry(() => {
-            const logs = stripAnsi(next.cliOutput.slice(outputIndex))
+            const logs = stripAnsi(
+              filterBrowserLogs(next.cliOutput.slice(outputIndex))
+            )
             expect(logs).toIncludeRepeated(' GET /default-cache', 1)
             expect(logs).toIncludeRepeated(` │ GET ${expectedUrl}`, 7)
             expect(logs).toIncludeRepeated(' │ │ Cache skipped reason', 3)
@@ -188,7 +195,9 @@ describe('app-dir - logging', () => {
             : 'https://next-data-api-en../api/random'
 
           await retry(() => {
-            const logs = stripAnsi(next.cliOutput.slice(outputIndex))
+            const logs = stripAnsi(
+              filterBrowserLogs(next.cliOutput.slice(outputIndex))
+            )
             expect(logs).toIncludeRepeated(` │ GET ${expectedUrl}`, 6)
             expect(logs).toIncludeRepeated(` │ POST ${expectedUrl}`, 6)
           })
@@ -199,7 +208,9 @@ describe('app-dir - logging', () => {
           await next.fetch('/no-store')
 
           await retry(() => {
-            const output = stripAnsi(next.cliOutput.slice(logLength))
+            const output = stripAnsi(
+              filterBrowserLogs(next.cliOutput.slice(logLength))
+            )
             expect(output).toContain('Cache skipped reason: (noStore call)')
           })
         })
@@ -209,7 +220,9 @@ describe('app-dir - logging', () => {
           await next.fetch('/fetch-no-store')
 
           await retry(() => {
-            const output = stripAnsi(next.cliOutput.slice(logLength))
+            const output = stripAnsi(
+              filterBrowserLogs(next.cliOutput.slice(logLength))
+            )
             expect(output).toContain('Cache skipped reason: (cache: no-store)')
           })
         })
@@ -219,7 +232,7 @@ describe('app-dir - logging', () => {
           await next.fetch('/')
           await retry(() => {
             const logsAfterRequest = stripAnsi(
-              next.cliOutput.slice(outputIndex)
+              filterBrowserLogs(next.cliOutput.slice(outputIndex))
             )
             // Only show `GET /` once
             expect(logsAfterRequest.split('GET /').length).toBe(2)
@@ -232,7 +245,9 @@ describe('app-dir - logging', () => {
           const browser = await next.browser('/link')
           await browser.elementByCss('a#foo').click()
           await browser.waitForElementByCss('h2')
-          const logs = stripAnsi(next.cliOutput.slice(outputIndex))
+          const logs = stripAnsi(
+            filterBrowserLogs(next.cliOutput.slice(outputIndex))
+          )
           expect(logs).not.toContain('/_next/static')
           expect(logs).not.toContain('?_rsc')
         })
@@ -243,7 +258,9 @@ describe('app-dir - logging', () => {
           const browser = await next.browser('/')
           await browser.elementByCss('a#nav-headers').click()
           await browser.waitForElementByCss('p')
-          const logs = stripAnsi(next.cliOutput.slice(outputIndex))
+          const logs = stripAnsi(
+            filterBrowserLogs(next.cliOutput.slice(outputIndex))
+          )
 
           expect(logs).toContain('GET /')
           expect(logs).toContain('GET /headers')
@@ -262,7 +279,9 @@ describe('app-dir - logging', () => {
             : 'https://next-data-api-en../api/random'
 
           await retry(() => {
-            const logs = stripAnsi(next.cliOutput.slice(outputIndex))
+            const logs = stripAnsi(
+              filterBrowserLogs(next.cliOutput.slice(outputIndex))
+            )
             expect(logs).toIncludeRepeated(` │ GET ${expectedUrl}`, 7)
           })
         })
@@ -276,7 +295,9 @@ describe('app-dir - logging', () => {
             : 'https://next-data-api-en../api/random'
 
           await retry(() => {
-            const logs = stripAnsi(next.cliOutput.slice(outputIndex))
+            const logs = stripAnsi(
+              filterBrowserLogs(next.cliOutput.slice(outputIndex))
+            )
             expect(logs).toIncludeRepeated(` │ GET ${expectedUrl}`, 7)
           })
 
@@ -285,7 +306,9 @@ describe('app-dir - logging', () => {
           await browser.elementById('revalidate-button').click()
 
           await retry(() => {
-            const logs = stripAnsi(next.cliOutput.slice(outputIndex))
+            const logs = stripAnsi(
+              filterBrowserLogs(next.cliOutput.slice(outputIndex))
+            )
             expect(logs).toIncludeRepeated(` │ GET ${expectedUrl}`, 7)
           })
         })
@@ -343,7 +366,9 @@ describe('app-dir - logging', () => {
         await next.fetch('/default-cache')
 
         await retry(() => {
-          const logs = stripAnsi(next.cliOutput.slice(outputIndex))
+          const logs = stripAnsi(
+            filterBrowserLogs(next.cliOutput.slice(outputIndex))
+          )
           expect(logs).not.toContain('GET /default-cache 200')
         })
       })
@@ -355,7 +380,9 @@ describe('app-dir - logging', () => {
         await next.fetch('/')
 
         await retry(() => {
-          const output = stripAnsi(next.cliOutput.slice(logLength))
+          const output = stripAnsi(
+            filterBrowserLogs(next.cliOutput.slice(logLength))
+          )
           expect(output).toContain('/')
           expect(output).not.toContain('/page')
         })
@@ -366,7 +393,9 @@ describe('app-dir - logging', () => {
         await next.fetch('/dynamic/big/icon')
 
         await retry(() => {
-          const output = stripAnsi(next.cliOutput.slice(logLength))
+          const output = stripAnsi(
+            filterBrowserLogs(next.cliOutput.slice(logLength))
+          )
           expect(output).toContain('/dynamic/[slug]/icon')
           expect(output).not.toContain('/(group)')
           expect(output).not.toContain('[__metadata_id__]')

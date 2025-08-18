@@ -1,6 +1,7 @@
 import { nextTestSetup } from 'e2e-utils'
 import { retry } from 'next-test-utils'
 import stripAnsi from 'strip-ansi'
+import { filterBrowserLogs } from '../../../lib/filter-browser-logs'
 
 describe('cache-components', () => {
   const { isNextDev, next, skipped } = nextTestSetup({
@@ -24,7 +25,7 @@ describe('cache-components', () => {
       })
 
       // do not strip ANSI codes here since we're explicitly testing coloring.
-      const cliOutputFromPage = next.cliOutput.match(
+      const cliOutputFromPage = filterBrowserLogs(next.cliOutput).match(
         /Compiled \/console[^\n]+\n(.*)\n GET \/console /s
       )[1]
 
