@@ -2,6 +2,7 @@
 import cheerio from 'cheerio'
 import fs, { existsSync } from 'fs-extra'
 import globOriginal from 'glob'
+import { filterBrowserLogs } from '../../../../lib/filter-browser-logs'
 import {
   renderViaHTTP,
   waitFor,
@@ -117,7 +118,9 @@ describe('Production Usage', () => {
       `Generating static pages (${pageCount}/${pageCount})`
     )
     // we should only have 4 segments and the initial message logged out
-    expect(next.cliOutput.match(/Generating static pages/g).length).toBe(5)
+    expect(
+      filterBrowserLogs(next.cliOutput).match(/Generating static pages/g).length
+    ).toBe(5)
   })
 
   it('should output traces', async () => {

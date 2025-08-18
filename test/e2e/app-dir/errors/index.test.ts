@@ -1,6 +1,7 @@
 import { nextTestSetup } from 'e2e-utils'
 import { retry } from 'next-test-utils'
 import stripAnsi from 'strip-ansi'
+import { filterBrowserLogs } from '../../../lib/filter-browser-logs'
 
 describe('app-dir - errors', () => {
   const { next, isNextDev, isNextStart, skipped } = nextTestSetup({
@@ -84,7 +85,7 @@ describe('app-dir - errors', () => {
       expect(
         await browser.waitForElementByCss('#error-boundary-digest').text()
       ).toBe('custom')
-      expect(stripAnsi(next.cliOutput)).toEqual(
+      expect(stripAnsi(filterBrowserLogs(next.cliOutput))).toEqual(
         expect.stringMatching(
           isNextDev
             ? /Error: this is a test.*digest: 'custom'/s
@@ -107,7 +108,7 @@ describe('app-dir - errors', () => {
         await browser.waitForElementByCss('#error-boundary-digest').text()
         // Digest of the error message should be stable.
       ).not.toBe('')
-      expect(stripAnsi(next.cliOutput)).toEqual(
+      expect(stripAnsi(filterBrowserLogs(next.cliOutput))).toEqual(
         expect.stringMatching(
           isNextDev
             ? /Error: An undefined error was thrown.*digest: '\d+'/s
@@ -130,7 +131,7 @@ describe('app-dir - errors', () => {
         await browser.waitForElementByCss('#error-boundary-digest').text()
         // Digest of the error message should be stable.
       ).not.toBe('')
-      expect(stripAnsi(next.cliOutput)).toEqual(
+      expect(stripAnsi(filterBrowserLogs(next.cliOutput))).toEqual(
         expect.stringMatching(
           isNextDev
             ? /Error: A null error was thrown.*digest: '\d+'/s
@@ -153,7 +154,7 @@ describe('app-dir - errors', () => {
         await browser.waitForElementByCss('#error-boundary-digest').text()
         // Digest of the error message should be stable.
       ).not.toBe('')
-      expect(stripAnsi(next.cliOutput)).toEqual(
+      expect(stripAnsi(filterBrowserLogs(next.cliOutput))).toEqual(
         expect.stringMatching(
           isNextDev
             ? /Error: this is a test.*digest: '\d+'/s

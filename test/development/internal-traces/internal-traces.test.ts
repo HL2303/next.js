@@ -1,5 +1,6 @@
 import { FileRef, nextTestSetup } from 'e2e-utils'
 import path from 'node:path'
+import { filterBrowserLogs } from '../../lib/filter-browser-logs'
 
 describe('internal traces', () => {
   const { next } = nextTestSetup({
@@ -8,8 +9,10 @@ describe('internal traces', () => {
 
   it('should not write long internal traces to stdio', async () => {
     await next.render$('/traces')
-    expect(next.cliOutput.length).toBeLessThan(256 * 1024 /* 256KiB of ascii */)
-    expect(next.cliOutput).not.toContain(
+    expect(filterBrowserLogs(next.cliOutput).length).toBeLessThan(
+      256 * 1024 /* 256KiB of ascii */
+    )
+    expect(filterBrowserLogs(next.cliOutput)).not.toContain(
       'https://nextjs.org/docs/messages/large-page-data'
     )
   })
