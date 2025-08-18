@@ -1,1 +1,4 @@
-module.exports = { crossOrigin: 'anonymous' }
+module.exports = {
+  browserDebugInfoInTerminal: false,
+  crossOrigin: 'anonymous',
+}

@@ -1,4 +1,5 @@
 module.exports = {
+  browserDebugInfoInTerminal: false,
   experimental: {
     clientTraceMetadata: [
       'my-parent-span-id',
