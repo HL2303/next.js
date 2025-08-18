@@ -58,6 +58,7 @@ import {
   NEXT_ROUTER_SEGMENT_PREFETCH_HEADER,
   NEXT_HMR_REFRESH_HASH_COOKIE,
   NEXT_DID_POSTPONE_HEADER,
+  NEXT_REQUEST_ID_HEADER,
 } from '../../client/components/app-router-headers'
 import { createMetadataContext } from '../../lib/metadata/metadata-context'
 import { createRequestStoreForRender } from '../async-storage/request-store'
@@ -1175,7 +1176,6 @@ async function getRSCPayload(
     P: <Preloads preloadCallbacks={preloadCallbacks} />,
     b: ctx.sharedContext.buildId,
     p: ctx.assetPrefix,
-    r: ctx.requestId,
     c: prepareInitialCanonicalUrl(url),
     i: !!couldBeIntercepted,
     f: [
@@ -1298,7 +1298,6 @@ async function getErrorRSCPayload(
   return {
     b: ctx.sharedContext.buildId,
     p: ctx.assetPrefix,
-    r: ctx.requestId,
     c: prepareInitialCanonicalUrl(url),
     m: undefined,
     i: false,
@@ -1333,12 +1332,14 @@ function App<T>({
   clientReferenceManifest,
   ServerInsertedHTMLProvider,
   nonce,
+  requestId,
 }: {
   reactServerStream: BinaryStreamOf<T>
   preinitScripts: () => void
   clientReferenceManifest: NonNullable<RenderOpts['clientReferenceManifest']>
   ServerInsertedHTMLProvider: React.ComponentType<{ children: JSX.Element }>
   nonce?: string
+  requestId: string
 }): JSX.Element {
   preinitScripts()
   const response = React.use(
@@ -1381,7 +1382,7 @@ function App<T>({
           actionQueue={actionQueue}
           globalErrorState={response.G}
           assetPrefix={response.p}
-          requestId={response.r}
+          requestId={requestId}
         />
       </ServerInsertedHTMLProvider>
     </HeadManagerContext.Provider>
@@ -1397,12 +1398,14 @@ function ErrorApp<T>({
   clientReferenceManifest,
   ServerInsertedHTMLProvider,
   nonce,
+  requestId,
 }: {
   reactServerStream: BinaryStreamOf<T>
   preinitScripts: () => void
   clientReferenceManifest: NonNullable<RenderOpts['clientReferenceManifest']>
   ServerInsertedHTMLProvider: React.ComponentType<{ children: JSX.Element }>
   nonce?: string
+  requestId: string
 }): JSX.Element {
   preinitScripts()
   const response = React.use(
@@ -1436,7 +1439,7 @@ function ErrorApp<T>({
         actionQueue={actionQueue}
         globalErrorState={response.G}
         assetPrefix={response.p}
-        requestId={response.r}
+        requestId={requestId}
       />
     </ServerInsertedHTMLProvider>
   )
@@ -1646,6 +1649,8 @@ async function renderToHTMLOrFlightImpl(
       require('next/dist/compiled/nanoid') as typeof import('next/dist/compiled/nanoid')
     ).nanoid()
   }
+
+  res.setHeader(NEXT_REQUEST_ID_HEADER, requestId)
 
   /**
    * Dynamic parameters. E.g. when you visit `/dashboard/vercel` which is rendered by `/dashboard/[slug]` the value will be {"slug": "vercel"}.
@@ -2081,7 +2086,7 @@ async function renderToStream(
   postponedState: PostponedState | null,
   metadata: AppPageRenderResultMetadata
 ): Promise<ReadableStream<Uint8Array>> {
-  const { assetPrefix, nonce, pagePath, renderOpts } = ctx
+  const { assetPrefix, nonce, pagePath, renderOpts, requestId } = ctx
 
   const {
     basePath,
@@ -2333,7 +2338,8 @@ async function renderToStream(
         const inlinedReactServerDataStream = createInlinedDataReadableStream(
           reactServerResult.tee(),
           nonce,
-          formState
+          formState,
+          requestId
         )
 
         return chainStreams(
@@ -2357,6 +2363,7 @@ async function renderToStream(
             clientReferenceManifest={clientReferenceManifest}
             ServerInsertedHTMLProvider={ServerInsertedHTMLProvider}
             nonce={nonce}
+            requestId={requestId}
           />,
           postponed,
           { onError: htmlRendererErrorHandler, nonce }
@@ -2373,7 +2380,8 @@ async function renderToStream(
           inlinedDataStream: createInlinedDataReadableStream(
             reactServerResult.consume(),
             nonce,
-            formState
+            formState,
+            requestId
           ),
           getServerInsertedHTML,
           getServerInsertedMetadata,
@@ -2395,6 +2403,7 @@ async function renderToStream(
         clientReferenceManifest={clientReferenceManifest}
         ServerInsertedHTMLProvider={ServerInsertedHTMLProvider}
         nonce={nonce}
+        requestId={requestId}
       />,
       {
         onError: htmlRendererErrorHandler,
@@ -2441,7 +2450,8 @@ async function renderToStream(
       inlinedDataStream: createInlinedDataReadableStream(
         reactServerResult.consume(),
         nonce,
-        formState
+        formState,
+        requestId
       ),
       isStaticGeneration: generateStaticHTML,
       isBuildTimePrerendering: ctx.workStore.isBuildTimePrerendering === true,
@@ -2553,6 +2563,7 @@ async function renderToStream(
               preinitScripts={errorPreinitScripts}
               clientReferenceManifest={clientReferenceManifest}
               nonce={nonce}
+              requestId={requestId}
             />
           ),
           streamOptions: {
@@ -2589,7 +2600,8 @@ async function renderToStream(
           // render
           reactServerResult.consume(),
           nonce,
-          formState
+          formState,
+          requestId
         ),
         isStaticGeneration: generateStaticHTML,
         isBuildTimePrerendering: ctx.workStore.isBuildTimePrerendering === true,
@@ -2647,6 +2659,7 @@ async function _spawnDynamicValidationInDev(
     implicitTags,
     nonce,
     renderOpts,
+    requestId,
     workStore,
   } = ctx
 
@@ -2896,6 +2909,7 @@ async function _spawnDynamicValidationInDev(
         clientReferenceManifest={clientReferenceManifest}
         ServerInsertedHTMLProvider={ServerInsertedHTMLProvider}
         nonce={nonce}
+        requestId={requestId}
       />,
       {
         signal: initialClientReactController.signal,
@@ -3124,6 +3138,7 @@ async function _spawnDynamicValidationInDev(
               clientReferenceManifest={clientReferenceManifest}
               ServerInsertedHTMLProvider={ServerInsertedHTMLProvider}
               nonce={nonce}
+              requestId={requestId}
             />,
             {
               signal: finalClientReactController.signal,
@@ -3230,6 +3245,7 @@ async function spawnDynamicValidationInDev(
     implicitTags,
     nonce,
     renderOpts,
+    requestId,
     workStore,
   } = ctx
 
@@ -3301,6 +3317,7 @@ async function spawnDynamicValidationInDev(
               clientReferenceManifest={clientReferenceManifest}
               ServerInsertedHTMLProvider={ServerInsertedHTMLProvider}
               nonce={nonce}
+              requestId={requestId}
             />,
             {
               signal: finalClientReactController.signal,
@@ -3442,6 +3459,7 @@ async function prerenderToStream(
     nonce,
     pagePath,
     renderOpts,
+    requestId,
     workStore,
   } = ctx
 
@@ -3813,6 +3831,7 @@ async function prerenderToStream(
             clientReferenceManifest={clientReferenceManifest}
             ServerInsertedHTMLProvider={ServerInsertedHTMLProvider}
             nonce={nonce}
+            requestId={requestId}
           />,
           {
             signal: initialClientReactController.signal,
@@ -4046,6 +4065,7 @@ async function prerenderToStream(
                 clientReferenceManifest={clientReferenceManifest}
                 ServerInsertedHTMLProvider={ServerInsertedHTMLProvider}
                 nonce={nonce}
+                requestId={requestId}
               />,
               {
                 signal: finalClientReactController.signal,
@@ -4203,6 +4223,7 @@ async function prerenderToStream(
               clientReferenceManifest={clientReferenceManifest}
               ServerInsertedHTMLProvider={ServerInsertedHTMLProvider}
               nonce={nonce}
+              requestId={requestId}
             />,
             JSON.parse(JSON.stringify(postponed)),
             {
@@ -4223,7 +4244,8 @@ async function prerenderToStream(
             inlinedDataStream: createInlinedDataReadableStream(
               reactServerResult.consumeAsStream(),
               nonce,
-              formState
+              formState,
+              requestId
             ),
             getServerInsertedHTML,
             getServerInsertedMetadata,
@@ -4308,6 +4330,7 @@ async function prerenderToStream(
           clientReferenceManifest={clientReferenceManifest}
           ServerInsertedHTMLProvider={ServerInsertedHTMLProvider}
           nonce={nonce}
+          requestId={requestId}
         />,
         {
           onError: htmlRendererErrorHandler,
@@ -4439,6 +4462,7 @@ async function prerenderToStream(
               clientReferenceManifest={clientReferenceManifest}
               ServerInsertedHTMLProvider={ServerInsertedHTMLProvider}
               nonce={nonce}
+              requestId={requestId}
             />,
             JSON.parse(JSON.stringify(postponed)),
             {
@@ -4459,7 +4483,8 @@ async function prerenderToStream(
             inlinedDataStream: createInlinedDataReadableStream(
               reactServerResult.consumeAsStream(),
               nonce,
-              formState
+              formState,
+              requestId
             ),
             getServerInsertedHTML,
             getServerInsertedMetadata,
@@ -4522,6 +4547,7 @@ async function prerenderToStream(
           clientReferenceManifest={clientReferenceManifest}
           ServerInsertedHTMLProvider={ServerInsertedHTMLProvider}
           nonce={nonce}
+          requestId={requestId}
         />,
         {
           onError: htmlRendererErrorHandler,
@@ -4555,7 +4581,8 @@ async function prerenderToStream(
           inlinedDataStream: createInlinedDataReadableStream(
             reactServerResult.consumeAsStream(),
             nonce,
-            formState
+            formState,
+            requestId
           ),
           isStaticGeneration: true,
           isBuildTimePrerendering:
@@ -4695,6 +4722,7 @@ async function prerenderToStream(
               preinitScripts={errorPreinitScripts}
               clientReferenceManifest={clientReferenceManifest}
               nonce={nonce}
+              requestId={requestId}
             />
           ),
           streamOptions: {
@@ -4732,7 +4760,8 @@ async function prerenderToStream(
           inlinedDataStream: createInlinedDataReadableStream(
             flightStream,
             nonce,
-            formState
+            formState,
+            requestId
           ),
           isStaticGeneration: true,
           isBuildTimePrerendering:
