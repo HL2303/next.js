@@ -1,5 +1,4 @@
 module.exports = {
-  browserDebugInfoInTerminal: false,
   async headers() {
     return [
       {

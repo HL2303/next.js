@@ -2,7 +2,6 @@
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
-  browserDebugInfoInTerminal: false,
   turbopack: {
     rules: {
       '*.test-file.ts': [require.resolve('./test-file-loader.js')],

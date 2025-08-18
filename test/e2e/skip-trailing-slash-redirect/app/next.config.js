@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  browserDebugInfoInTerminal: false,
   skipMiddlewareUrlNormalize: true,
   skipTrailingSlashRedirect: true,
   experimental: {

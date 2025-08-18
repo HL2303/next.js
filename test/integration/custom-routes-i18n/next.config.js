@@ -1,7 +1,6 @@
 const destination = 'http://localhost:__EXTERNAL_PORT__'
 
 module.exports = {
-  browserDebugInfoInTerminal: false,
   i18n: {
     // localeDetection: false,
     locales: ['nl-NL', 'nl-BE', 'nl', 'fr-BE', 'fr', 'en'],

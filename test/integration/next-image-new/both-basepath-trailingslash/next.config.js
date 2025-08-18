@@ -1,5 +1,4 @@
 module.exports = {
-  browserDebugInfoInTerminal: false,
   basePath: '/prefix',
   trailingSlash: true,
   images: {

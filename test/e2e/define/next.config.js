@@ -1,5 +1,4 @@
 module.exports = {
-  browserDebugInfoInTerminal: false,
   compiler: {
     define: {
       MY_MAGIC_VARIABLE: 'foobar',

@@ -1,5 +1,4 @@
 module.exports = {
-  browserDebugInfoInTerminal: false,
   reactStrictMode: true,
   transpilePackages: ['css', 'font', 'transpile-ts-lib', 'transpile-cjs-lib'],
   serverExternalPackages: [

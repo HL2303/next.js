@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  browserDebugInfoInTerminal: false,
   reactStrictMode: true,
   rewrites: async () => {
     return {

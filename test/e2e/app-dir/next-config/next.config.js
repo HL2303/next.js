@@ -3,7 +3,6 @@ console.log(require('webpack').sources.RawSource)
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  browserDebugInfoInTerminal: false,
   webpack(config) {
     return config
   },

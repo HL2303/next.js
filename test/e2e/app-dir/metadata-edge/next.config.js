@@ -1,6 +1,4 @@
-module.exports = {
-  browserDebugInfoInTerminal: false,
-}
+module.exports = {}
 
 // For development: analyze the bundled chunks for stats app
 if (process.env.ANALYZE) {

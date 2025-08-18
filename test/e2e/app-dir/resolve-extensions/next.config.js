@@ -4,7 +4,6 @@ const extensions = ['', '.png', '.tsx', '.ts', '.jsx', '.js', '.json']
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
-  browserDebugInfoInTerminal: false,
   turbopack: {
     resolveExtensions: [...extensions],
   },

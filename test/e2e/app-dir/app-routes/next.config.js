@@ -1,9 +1,7 @@
 /**
  * @type {import('next').NextConfig}
  */
-const config = {
-  browserDebugInfoInTerminal: false,
-}
+const config = {}
 
 if (process.env.BASE_PATH) {
   config.basePath = process.env.BASE_PATH

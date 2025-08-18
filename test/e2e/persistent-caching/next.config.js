@@ -2,7 +2,6 @@
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
-  browserDebugInfoInTerminal: false,
   turbopack: {
     rules: {
       'app/page.tsx': {

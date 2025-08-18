@@ -1,5 +1,4 @@
 module.exports = {
-  browserDebugInfoInTerminal: false,
   output: 'export',
   exportTrailingSlash: true,
   exportPathMap: function (defaultPathMap) {

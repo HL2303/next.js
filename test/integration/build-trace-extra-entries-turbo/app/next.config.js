@@ -1,7 +1,6 @@
 const path = require('path')
 
 module.exports = {
-  browserDebugInfoInTerminal: false,
   webpack(cfg, { isServer, nextRuntime }) {
     console.log(cfg.entry)
     const origEntry = cfg.entry

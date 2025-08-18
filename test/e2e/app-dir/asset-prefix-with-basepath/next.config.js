@@ -1,5 +1,4 @@
 module.exports = {
-  browserDebugInfoInTerminal: false,
   assetPrefix: '/custom-asset-prefix',
   basePath: '/custom-base-path',
   async rewrites() {

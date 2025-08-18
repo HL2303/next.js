@@ -1,5 +1,4 @@
 module.exports = {
-  browserDebugInfoInTerminal: false,
   webpack(config, options) {
     if (!options.isServer) {
       config.profile = true

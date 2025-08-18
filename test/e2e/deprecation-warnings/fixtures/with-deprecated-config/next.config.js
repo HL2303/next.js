@@ -1,6 +1,4 @@
 module.exports = {
-  browserDebugInfoInTerminal: false,
-  // Explicitly configure deprecated options
   amp: {
     canonicalBase: 'https://example.com',
   },

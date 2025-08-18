@@ -1,5 +1,4 @@
 module.exports = {
-  browserDebugInfoInTerminal: false,
   experimental: {
     urlImports: [
       'http://localhost:12345/',

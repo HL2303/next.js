@@ -1,5 +1,4 @@
 module.exports = {
-  browserDebugInfoInTerminal: false,
   turbopack: {
     resolveAlias: {
       foo: './turbopack.js',

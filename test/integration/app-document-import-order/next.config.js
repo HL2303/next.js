@@ -1,5 +1,4 @@
 module.exports = {
-  browserDebugInfoInTerminal: false,
   webpack: (config, { isServer }) => {
     if (!isServer) {
       const optimization = config.optimization || {}

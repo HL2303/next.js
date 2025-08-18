@@ -1,6 +1,4 @@
 module.exports = {
-  browserDebugInfoInTerminal: false,
-  // basePath: '/docs',
   // trailingSlash: true,
   i18n: {
     // localeDetection: false,

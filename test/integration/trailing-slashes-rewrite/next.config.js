@@ -1,5 +1,4 @@
 module.exports = {
-  browserDebugInfoInTerminal: false,
   trailingSlash: true,
 
   async rewrites() {

@@ -4,7 +4,6 @@ const withMDX = require('@next/mdx')()
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
-  browserDebugInfoInTerminal: false,
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'md', 'mdx'],
   modularizeImports: {
     'design-system/icons': {

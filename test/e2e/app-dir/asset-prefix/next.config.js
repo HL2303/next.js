@@ -1,5 +1,4 @@
 module.exports = {
-  browserDebugInfoInTerminal: false,
   assetPrefix: '/custom-asset-prefix',
   async rewrites() {
     return {

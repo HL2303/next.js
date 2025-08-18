@@ -1,5 +1,4 @@
 module.exports = {
-  browserDebugInfoInTerminal: false,
   transpilePackages: ['my-client-lib'],
   experimental: {
     optimizePackageImports: ['my-lib', 'recursive-barrel', 'my-client-lib'],

@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  browserDebugInfoInTerminal: false,
   output: 'export',
   // distDir: '.next-custom',
   trailingSlash: true,

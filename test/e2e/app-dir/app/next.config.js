@@ -2,7 +2,6 @@
  * @type import('next').NextConfig
  */
 module.exports = {
-  browserDebugInfoInTerminal: false,
   env: {
     LEGACY_ENV_KEY: '1',
   },

@@ -1,6 +1,4 @@
 module.exports = {
-  browserDebugInfoInTerminal: false,
-  // replace me
   async rewrites() {
     return [
       {

@@ -2,6 +2,7 @@ import { nextTestSetup, FileRef } from 'e2e-utils'
 import { assertHasRedbox, retry } from 'next-test-utils'
 import { join } from 'path'
 import stripAnsi from 'strip-ansi'
+import { filterBrowserLogs } from '../../lib/filter-browser-logs'
 
 function normalizeCodeLocInfo(str) {
   return (
@@ -69,7 +70,9 @@ describe.each(
     const outputIndex = next.cliOutput.length
     await next.render('/library-react-server')
 
-    const cliOutput = stripAnsi(next.cliOutput.slice(outputIndex))
+    const cliOutput = filterBrowserLogs(
+      stripAnsi(next.cliOutput.slice(outputIndex))
+    )
     expect(cliOutput).not.toMatch(/error/)
   })
 
@@ -77,7 +80,9 @@ describe.each(
     const outputIndex = next.cliOutput.length
     await next.render('/library-client')
 
-    const cliOutput = stripAnsi(next.cliOutput.slice(outputIndex))
+    const cliOutput = filterBrowserLogs(
+      stripAnsi(next.cliOutput.slice(outputIndex))
+    )
     expect(cliOutput).not.toMatch(/error/)
   })
 

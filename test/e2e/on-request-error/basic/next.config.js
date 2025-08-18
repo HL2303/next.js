@@ -1,3 +1,1 @@
-module.exports = {
-  browserDebugInfoInTerminal: false,
-}
+module.exports = {}

@@ -1,5 +1,4 @@
 module.exports = {
-  browserDebugInfoInTerminal: false,
   i18n: {
     // localeDetection: false,
     locales: ['nl-NL', 'nl-BE', 'nl', 'fr-BE', 'fr', 'en'],
